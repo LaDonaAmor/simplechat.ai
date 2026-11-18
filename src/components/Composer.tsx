@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface ComposerProps {
   onSend: (text: string) => void;
@@ -7,6 +7,14 @@ interface ComposerProps {
 
 export default function Composer({ onSend, disabled }: ComposerProps) {
   const [value, setValue] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${Math.min(el.scrollHeight, 160)}px`;
+  }, [value]);
 
   function handleSend() {
     const text = value.trim();
@@ -25,6 +33,7 @@ export default function Composer({ onSend, disabled }: ComposerProps) {
     >
       <div className="flex items-end gap-2 rounded-2xl border border-zinc-300 bg-white p-2 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
         <textarea
+          ref={textareaRef}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={(e) => {
@@ -35,7 +44,7 @@ export default function Composer({ onSend, disabled }: ComposerProps) {
           }}
           rows={1}
           placeholder="Send a message..."
-          className="max-h-40 flex-1 resize-none bg-transparent px-2 py-1.5 outline-none"
+          className="max-h-40 flex-1 resize-none overflow-y-auto bg-transparent px-2 py-1.5 outline-none"
         />
         <button
           type="submit"
