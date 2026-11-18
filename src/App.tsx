@@ -56,6 +56,12 @@ function App() {
   );
 
   function handleNew() {
+    const existingEmpty = conversations.find((c) => c.messages.length === 0);
+    if (existingEmpty) {
+      setActiveId(existingEmpty.id);
+      setSidebarOpen(false);
+      return;
+    }
     const conversation: Conversation = {
       id: newId(),
       title: "New chat",
@@ -75,11 +81,15 @@ function App() {
 
   function handleDelete(id: string) {
     setConversations((prev) => prev.filter((c) => c.id !== id));
-    if (activeId === id) setActiveId(null);
+    setActiveId((current) => {
+      if (current !== id) return current;
+      const remaining = conversations.filter((c) => c.id !== id);
+      return remaining[0]?.id ?? null;
+    });
   }
 
   async function handleSend(text: string) {
-    if (!activeConversation) return;
+    if (!activeConversation || isSending) return;
     const userMessage: Message = { id: newId(), role: "user", content: text };
     const history = [...activeConversation.messages, userMessage];
     const convId = activeConversation.id;
@@ -117,6 +127,7 @@ function App() {
         id: newId(),
         role: "assistant",
         content: "Sorry, something went wrong. Please try again.",
+        error: true,
       };
       setConversations((prev) =>
         prev.map((c) =>
