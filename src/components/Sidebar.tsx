@@ -12,6 +12,9 @@ interface SidebarProps {
   onDelete: (id: string) => void;
 }
 
+const actionClasses =
+  "text-xs text-zinc-400 opacity-100 transition hover:text-zinc-100 focus-visible:opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100";
+
 export default function Sidebar({
   conversations,
   activeId,
@@ -33,12 +36,16 @@ export default function Sidebar({
   return (
     <>
       {isOpen && (
-        <div
-          className="fixed inset-0 z-20 bg-black/50 md:hidden"
+        <button
+          type="button"
+          aria-label="Close conversations"
           onClick={onClose}
+          className="fixed inset-0 z-20 bg-black/50 md:hidden"
         />
       )}
       <aside
+        id="conversation-sidebar"
+        aria-label="Conversations"
         className={`fixed inset-y-0 left-0 z-30 flex w-72 flex-col bg-zinc-900 text-zinc-100 transition-transform md:static md:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
@@ -54,7 +61,10 @@ export default function Sidebar({
           </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-2 pb-2">
+        <nav
+          aria-label="Conversation list"
+          className="flex-1 overflow-y-auto px-2 pb-2"
+        >
           {conversations.length === 0 && (
             <p className="px-2 py-4 text-sm text-zinc-400">
               No conversations yet.
@@ -70,6 +80,7 @@ export default function Sidebar({
               {editingId === c.id ? (
                 <input
                   autoFocus
+                  aria-label="Conversation title"
                   value={draft}
                   onChange={(e) => setDraft(e.target.value)}
                   onBlur={commit}
@@ -87,6 +98,7 @@ export default function Sidebar({
                       onSelect(c.id);
                       onClose();
                     }}
+                    aria-current={c.id === activeId ? "page" : undefined}
                     className="flex-1 truncate text-left"
                     title={c.title}
                   >
@@ -98,16 +110,16 @@ export default function Sidebar({
                       setEditingId(c.id);
                       setDraft(c.title);
                     }}
-                    className="text-xs text-zinc-400 opacity-0 group-hover:opacity-100"
-                    aria-label="Rename conversation"
+                    aria-label={`Rename ${c.title}`}
+                    className={actionClasses}
                   >
                     Edit
                   </button>
                   <button
                     type="button"
                     onClick={() => onDelete(c.id)}
-                    className="text-xs text-zinc-400 opacity-0 group-hover:opacity-100"
-                    aria-label="Delete conversation"
+                    aria-label={`Delete ${c.title}`}
+                    className={actionClasses}
                   >
                     Del
                   </button>

@@ -147,6 +147,9 @@ function App() {
         <button
           type="button"
           onClick={() => setSidebarOpen(true)}
+          aria-label="Open conversations"
+          aria-expanded={sidebarOpen}
+          aria-controls="conversation-sidebar"
           className="m-2 self-start rounded-md border border-zinc-300 px-3 py-1 text-sm md:hidden"
         >
           Menu
