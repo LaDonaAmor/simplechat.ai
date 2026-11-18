@@ -1,28 +1,48 @@
 import type { Message } from "../types/chat";
 
+interface ChatApiResponse {
+  content?: string;
+  error?: string;
+}
+
 export async function getChatbotResponse(history: Message[]): Promise<string> {
-  const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+  const messages = history
+    .filter((m) => !m.error)
+    .map((m) => ({ role: m.role, content: m.content }));
 
-  if (!apiKey) return mockResponse(history);
+  let res: Response;
+  try {
+    res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages }),
+    });
+  } catch (err) {
+    if (import.meta.env.DEV) return mockResponse(history);
+    throw err;
+  }
 
-  const res = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: "You are a helpful, friendly assistant." },
-        ...history.map((m) => ({ role: m.role, content: m.content })),
-      ],
-    }),
-  });
+  const contentType = res.headers.get("content-type") ?? "";
+  if (!contentType.includes("application/json")) {
+    // Plain `vite dev` has no /api route and serves index.html here.
+    if (import.meta.env.DEV) return mockResponse(history);
+    throw new Error("Unexpected response from server");
+  }
 
-  if (!res.ok) throw new Error(`API error: ${res.status}`);
-  const data = await res.json();
-  return (data.choices[0].message.content as string).trim();
+  const data = (await res.json()) as ChatApiResponse;
+
+  // Server has no OPENAI_API_KEY set — keep the app usable with mock replies.
+  if (res.status === 503 || data.error === "not_configured") {
+    return mockResponse(history);
+  }
+
+  if (!res.ok) {
+    throw new Error(data.error ?? `API error: ${res.status}`);
+  }
+
+  const content = data.content?.trim();
+  if (!content) throw new Error("Empty response from server");
+  return content;
 }
 
 function mockResponse(history: Message[]): Promise<string> {
