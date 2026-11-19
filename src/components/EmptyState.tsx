@@ -1,7 +1,19 @@
 const SUGGESTIONS = [
-  "What can you help me with?",
-  "Explain closures in JavaScript",
-  "Help me plan a small side project",
+  {
+    label: "Learn something",
+    prompt: "Explain a difficult topic in simple terms",
+    mark: "01",
+  },
+  {
+    label: "Build an idea",
+    prompt: "Help me plan a small web development project",
+    mark: "02",
+  },
+  {
+    label: "Write with clarity",
+    prompt: "Help me write a clear and friendly email",
+    mark: "03",
+  },
 ];
 
 export default function EmptyState({
@@ -10,35 +22,53 @@ export default function EmptyState({
   onPick: (text: string) => void;
 }) {
   return (
-    <div className="mx-auto flex min-h-full w-full max-w-2xl flex-col justify-center px-4 py-12 sm:px-6">
-      <div className="mb-8">
-        <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.16em] text-muted">
-          New conversation
-        </p>
-        <h2 className="font-serif text-3xl leading-tight tracking-tight text-ink sm:text-4xl">
-          What&apos;s on your mind?
-        </h2>
-        <p className="mt-3 max-w-md text-[15px] leading-7 text-muted">
-          Ask a question, or start from one of these.
+    <div className="mx-auto flex min-h-full w-full max-w-3xl flex-col justify-center px-5 py-12 sm:px-8">
+      <div className="mb-9 max-w-xl">
+        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-line bg-surface px-3 py-1.5">
+          <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+          <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted">
+            A fresh conversation
+          </span>
+        </div>
+
+        <h1 className="font-serif text-[38px] leading-[1.08] tracking-tight text-ink sm:text-5xl">
+          A little curiosity
+          <br />
+          goes a long way.
+        </h1>
+
+        <p className="mt-4 max-w-md text-sm leading-7 text-muted sm:text-[15px]">
+          Ask a question, think through an idea, or get help with the next thing
+          you’re working on.
         </p>
       </div>
-      <div className="grid gap-2 sm:grid-cols-2">
-        {SUGGESTIONS.map((s) => (
-          <button
-            key={s}
-            type="button"
-            onClick={() => onPick(s)}
-            className="group flex items-center justify-between gap-3 rounded-xl border border-line bg-surface px-4 py-3 text-left text-sm text-ink transition hover:border-accent/40 hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
-          >
-            <span className="truncate">{s}</span>
-            <span
-              aria-hidden
-              className="text-muted transition group-hover:translate-x-0.5 group-hover:text-accent"
+
+      <div>
+        <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted">
+          Start with a prompt
+        </p>
+        <div className="grid gap-2 sm:grid-cols-3">
+          {SUGGESTIONS.map((suggestion) => (
+            <button
+              key={suggestion.label}
+              type="button"
+              onClick={() => onPick(suggestion.prompt)}
+              className="group min-h-29 rounded-2xl border border-line bg-surface p-4 text-left transition hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-[0_12px_28px_-20px_rgb(31_43_34/45%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
             >
-              &rarr;
-            </span>
-          </button>
-        ))}
+              <span className="flex items-center justify-between">
+                <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted">
+                  {suggestion.label}
+                </span>
+                <span className="font-serif text-xs text-accent">
+                  {suggestion.mark}
+                </span>
+              </span>
+              <span className="mt-5 block text-[13px] leading-5 text-ink">
+                {suggestion.prompt}
+              </span>
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

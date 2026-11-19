@@ -1,44 +1,44 @@
 import type { Message } from "../types/chat";
 
 export default function MessageBubble({ message }: { message: Message }) {
-  if (message.error) {
-    return (
-      <div className="flex animate-[rise_200ms_ease-out] gap-3">
-        <Avatar />
-        <div className="max-w-[85%] rounded-xl border border-danger/30 bg-danger/5 px-4 py-2.5 text-[15px] leading-7 text-danger">
-          {message.content}
-        </div>
-      </div>
-    );
-  }
-
   if (message.role === "user") {
     return (
-      <div className="flex animate-[rise_200ms_ease-out] justify-end">
-        <div className="max-w-[80%] whitespace-pre-wrap rounded-2xl rounded-br-md bg-surface-2 px-4 py-2.5 text-[15px] leading-7 text-ink">
-          {message.content}
+      <article className="flex animate-[rise_220ms_ease-out] justify-end">
+        <div className="max-w-[88%] rounded-[22px] rounded-br-md bg-accent px-4 py-3 text-[14px] leading-7 text-on-accent shadow-sm sm:max-w-[78%] sm:px-5">
+          <p className="whitespace-pre-wrap wrap-break-word">
+            {message.content}
+          </p>
         </div>
-      </div>
+      </article>
     );
   }
 
   return (
-    <div className="flex animate-[rise_200ms_ease-out] gap-3">
-      <Avatar />
-      <div className="min-w-0 max-w-[85%] whitespace-pre-wrap text-[15px] leading-7 text-ink">
-        {message.content}
-      </div>
-    </div>
-  );
-}
-
-function Avatar() {
-  return (
-    <span
-      aria-hidden
-      className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full border border-line bg-surface font-serif text-[13px] text-accent"
+    <article
+      className={`flex animate-[rise_220ms_ease-out] items-start gap-3 sm:gap-4 ${
+        message.error ? "text-danger" : "text-ink"
+      }`}
     >
-      S
-    </span>
+      <span
+        aria-hidden="true"
+        className={`grid h-9 w-9 shrink-0 place-items-center rounded-2xl text-xs font-semibold shadow-sm ${
+          message.error
+            ? "bg-danger/10 text-danger"
+            : "bg-accent-soft text-accent"
+        }`}
+      >
+        S
+      </span>
+      <div
+        className={`min-w-0 max-w-[90%] pt-1 text-[14px] leading-7 sm:max-w-[82%] sm:text-[15px] ${
+          message.error ? "text-danger" : "text-ink"
+        }`}
+      >
+        <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted">
+          {message.error ? "Couldn’t respond" : "SimpleChat"}
+        </p>
+        <p className="whitespace-pre-wrap wrap-break-word">{message.content}</p>
+      </div>
+    </article>
   );
 }

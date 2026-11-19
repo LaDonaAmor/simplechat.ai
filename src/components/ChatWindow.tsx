@@ -22,48 +22,72 @@ export default function ChatWindow({
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const el = bottomRef.current;
-    if (!el) return;
-    const reduce = window.matchMedia(
+    const bottom = bottomRef.current;
+    if (!bottom) return;
+
+    const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "end" });
+
+    bottom.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "end",
+    });
   }, [conversation?.id, conversation?.messages.length, isSending]);
 
   if (!conversation) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-2 text-muted">
-        <p className="font-serif text-lg text-ink">No conversation selected</p>
-        <p className="text-sm">Start a new chat to begin.</p>
-      </div>
+      <section className="grid min-h-0 flex-1 place-items-center px-6 text-center">
+        <div>
+          <p className="font-serif text-2xl">No conversation selected</p>
+          <p className="mt-2 text-sm text-muted">
+            Choose a conversation or start a new one.
+          </p>
+        </div>
+      </section>
     );
   }
 
   const isEmpty = conversation.messages.length === 0;
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col bg-paper">
-      <header className="flex h-14 shrink-0 items-center gap-3 border-b border-line px-3 sm:px-4">
+    <section className="flex min-h-0 flex-1 flex-col bg-paper">
+      <header className="flex h-18 shrink-0 items-center gap-3 border-b border-line/80 bg-paper/90 px-4 sm:px-8">
         <button
           type="button"
           onClick={onOpenSidebar}
           aria-label="Open conversations"
-          className="grid h-9 w-9 place-items-center rounded-lg text-muted transition hover:bg-surface-2 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 md:hidden"
+          aria-controls="conversation-sidebar"
+          className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-line bg-surface text-muted transition hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 md:hidden"
         >
-          <MenuIcon className="h-4.5 w-4.5" />
+          <MenuIcon className="h-4 w-4" />
         </button>
-        <h1 className="min-w-0 flex-1 truncate font-serif text-[15px] tracking-tight text-ink">
-          {conversation.title}
-        </h1>
+
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-semibold text-ink">
+            {conversation.title}
+          </p>
+          <p className="mt-0.5 text-[11px] text-muted">SimpleChat assistant</p>
+        </div>
+
+        <div className="hidden items-center gap-2 rounded-full border border-line bg-surface px-3 py-1.5 sm:flex">
+          <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+          <span className="text-[11px] font-medium text-muted">
+            Private conversation
+          </span>
+        </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto">
+      <div
+        aria-live="polite"
+        className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
+      >
         {isEmpty && !isSending ? (
           <EmptyState onPick={onSend} />
         ) : (
-          <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-8 sm:px-6">
-            {conversation.messages.map((m) => (
-              <MessageBubble key={m.id} message={m} />
+          <div className="mx-auto flex w-full max-w-3xl flex-col gap-8 px-4 py-8 sm:gap-10 sm:px-8 sm:py-10">
+            {conversation.messages.map((message) => (
+              <MessageBubble key={message.id} message={message} />
             ))}
             {isSending && <TypingIndicator />}
             <div ref={bottomRef} />
@@ -72,6 +96,6 @@ export default function ChatWindow({
       </div>
 
       <Composer onSend={onSend} disabled={isSending} />
-    </div>
+    </section>
   );
 }
