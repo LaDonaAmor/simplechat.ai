@@ -1,8 +1,109 @@
 @import "tailwindcss";
 
+@theme inline {
+  --font-sans:
+    "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif:
+    "Fraunces", "Iowan Old Style", Georgia, "Times New Roman", serif;
+
+  --color-paper: var(--c-paper);
+  --color-surface: var(--c-surface);
+  --color-surface-2: var(--c-surface-2);
+  --color-ink: var(--c-ink);
+  --color-muted: var(--c-muted);
+  --color-line: var(--c-line);
+  --color-accent: var(--c-accent);
+  --color-accent-soft: var(--c-accent-soft);
+  --color-on-accent: var(--c-on-accent);
+  --color-danger: var(--c-danger);
+}
+
+:root {
+  --c-paper: #fbfaf7;
+  --c-surface: #ffffff;
+  --c-surface-2: #f3f1ea;
+  --c-ink: #1c1b18;
+  --c-muted: #6f6b63;
+  --c-line: #e8e5dd;
+  --c-accent: #3f5e4e;
+  --c-accent-soft: #e8f0ea;
+  --c-on-accent: #ffffff;
+  --c-danger: #9d3d3d;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --c-paper: #141311;
+    --c-surface: #1b1a17;
+    --c-surface-2: #25231f;
+    --c-ink: #ece9e2;
+    --c-muted: #9b958a;
+    --c-line: #2f2c27;
+    --c-accent: #93b6a2;
+    --c-accent-soft: #22302a;
+    --c-on-accent: #10201a;
+    --c-danger: #d99a9a;
+    color-scheme: dark;
+  }
+}
+
 html,
 body,
 #root {
   height: 100%;
   margin: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--c-paper);
+  color: var(--c-ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--c-accent-soft);
+  color: var(--c-ink);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-line) transparent;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

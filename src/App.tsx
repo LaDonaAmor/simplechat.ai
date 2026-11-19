@@ -143,7 +143,7 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-white text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100">
+    <div className="flex h-dvh w-full overflow-hidden bg-paper text-ink">
       <Sidebar
         conversations={conversations}
         activeId={activeConversation?.id ?? null}
@@ -155,20 +155,11 @@ function App() {
         onDelete={handleDelete}
       />
       <main className="flex min-h-0 flex-1 flex-col">
-        <button
-          type="button"
-          onClick={() => setSidebarOpen(true)}
-          aria-label="Open conversations"
-          aria-expanded={sidebarOpen}
-          aria-controls="conversation-sidebar"
-          className="m-2 self-start rounded-md border border-zinc-300 px-3 py-1 text-sm md:hidden"
-        >
-          Menu
-        </button>
         <ChatWindow
           conversation={activeConversation}
           isSending={isSending}
           onSend={handleSend}
+          onOpenSidebar={() => setSidebarOpen(true)}
         />
       </main>
     </div>
