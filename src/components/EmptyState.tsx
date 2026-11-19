@@ -1,7 +1,7 @@
 const SUGGESTIONS = [
-  "What can you do?",
+  "What can you help me with?",
   "Explain closures in JavaScript",
-  "Give me ideas for a side project",
+  "Help me plan a small side project",
 ];
 
 export default function EmptyState({
@@ -10,22 +10,33 @@ export default function EmptyState({
   onPick: (text: string) => void;
 }) {
   return (
-    <div className="flex min-h-full flex-col items-center justify-center gap-6 px-4 text-center">
-      <div>
-        <h2 className="text-xl font-semibold">How can I help you today?</h2>
-        <p className="mt-1 text-sm text-zinc-500">
-          Ask anything to start the conversation.
+    <div className="mx-auto flex min-h-full w-full max-w-2xl flex-col justify-center px-4 py-12 sm:px-6">
+      <div className="mb-8">
+        <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.16em] text-muted">
+          New conversation
+        </p>
+        <h2 className="font-serif text-3xl leading-tight tracking-tight text-ink sm:text-4xl">
+          What&apos;s on your mind?
+        </h2>
+        <p className="mt-3 max-w-md text-[15px] leading-7 text-muted">
+          Ask a question, or start from one of these.
         </p>
       </div>
-      <div className="flex flex-wrap justify-center gap-2">
+      <div className="grid gap-2 sm:grid-cols-2">
         {SUGGESTIONS.map((s) => (
           <button
             key={s}
             type="button"
             onClick={() => onPick(s)}
-            className="rounded-full border border-zinc-300 px-3 py-1.5 text-sm hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
+            className="group flex items-center justify-between gap-3 rounded-xl border border-line bg-surface px-4 py-3 text-left text-sm text-ink transition hover:border-accent/40 hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
           >
-            {s}
+            <span className="truncate">{s}</span>
+            <span
+              aria-hidden
+              className="text-muted transition group-hover:translate-x-0.5 group-hover:text-accent"
+            >
+              &rarr;
+            </span>
           </button>
         ))}
       </div>
