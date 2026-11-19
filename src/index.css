@@ -1,8 +1,119 @@
 @import "tailwindcss";
 
+@theme inline {
+  --font-sans:
+    "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "DM Serif Display", Georgia, "Times New Roman", serif;
+
+  --color-paper: var(--c-paper);
+  --color-surface: var(--c-surface);
+  --color-surface-2: var(--c-surface-2);
+  --color-ink: var(--c-ink);
+  --color-muted: var(--c-muted);
+  --color-line: var(--c-line);
+  --color-accent: var(--c-accent);
+  --color-accent-soft: var(--c-accent-soft);
+  --color-on-accent: var(--c-on-accent);
+  --color-danger: var(--c-danger);
+}
+
+:root {
+  color-scheme: light;
+  --c-paper: #f7f7f3;
+  --c-surface: #ffffff;
+  --c-surface-2: #f0f2ed;
+  --c-ink: #20271f;
+  --c-muted: #7d857b;
+  --c-line: #e5e8e1;
+  --c-accent: #355b45;
+  --c-accent-soft: #e8efe9;
+  --c-on-accent: #ffffff;
+  --c-danger: #b34444;
+}
+
+* {
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-line) transparent;
+}
+
 html,
 body,
 #root {
+  width: 100%;
   height: 100%;
+  min-height: 100%;
   margin: 0;
+}
+
+body {
+  background: var(--c-paper);
+  color: var(--c-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+textarea,
+input {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: var(--c-accent-soft);
+  color: var(--c-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 3px;
+}
+
+dialog {
+  color: var(--c-ink);
+}
+
+dialog::backdrop {
+  background: rgb(20 25 20 / 46%);
+  backdrop-filter: blur(4px);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
