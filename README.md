@@ -25,9 +25,21 @@ pnpm lint
 
 ## AI API
 
-Without `VITE_OPENAI_API_KEY` the app uses built-in mock replies.
-WARNING: `VITE_*` variables are public in the browser bundle. Use a
-server-side proxy for real API keys.
+The app talks to `/api/chat`, a Vercel serverless function (`api/chat.ts`)
+that calls OpenAI. The API key lives only on the server.
+
+- No `OPENAI_API_KEY` set → the app uses built-in mock replies.
+- Local `pnpm dev` → mock (Vite doesn't run the function).
+- Local full-stack → `pnpm dlx vercel dev` (runs `api/` functions).
+- Deployed on Vercel → real API when `OPENAI_API_KEY` is configured.
+
+### Configure the real API
+
+1. Vercel → Project → Settings → Environment Variables
+2. Add `OPENAI_API_KEY` (Production, Preview, Development)
+3. Redeploy (env changes need a new deployment)
+
+Never prefix the key with `VITE_` — that exposes it to the browser.
 
 ## License
 
