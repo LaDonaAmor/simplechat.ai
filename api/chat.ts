@@ -52,7 +52,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     return;
   }
 
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
     // 503 lets the client fall back to mock responses instead of breaking.
     res.status(503).json({ error: "not_configured" });
@@ -66,23 +66,29 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   }
 
   try {
-    const upstream = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
+    const upstream = await fetch(
+      "https://api.groq.com/openai/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: "openai/gpt-oss-20b",
+          max_completion_tokens: 500,
+          messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
+        }),
       },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        max_tokens: 500,
-        messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
-      }),
-    });
+    );
 
     if (!upstream.ok) {
+      const errorDetails = await upstream.text();
+      console.error("Groq API error:", upstream.status, errorDetails);
+
       res
         .status(upstream.status)
-        .json({ error: `OpenAI request failed (${upstream.status})` });
+        .json({ error: `Groq request failed (${upstream.status})` });
       return;
     }
 
@@ -92,7 +98,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
 
     const content = data.choices?.[0]?.message?.content?.trim() ?? "";
     if (!content) {
-      res.status(502).json({ error: "Empty response from OpenAI" });
+      res.status(502).json({ error: "Empty response from Groq" });
       return;
     }
 
