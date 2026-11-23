@@ -318,6 +318,7 @@ export default function Sidebar({
             <div className="mt-7 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
               <button
                 type="button"
+                autoFocus
                 onClick={() => setPendingDelete(null)}
                 className="rounded-xl border border-line px-4 py-2.5 text-sm font-medium text-ink transition hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
               >

@@ -31,7 +31,7 @@ export async function getChatbotResponse(history: Message[]): Promise<string> {
 
   const data = (await res.json()) as ChatApiResponse;
 
-  // Server has no OPENAI_API_KEY set — keep the app usable with mock replies.
+  // Server has no GROQ_API_KEY set — keep the app usable with mock replies.
   if (res.status === 503 || data.error === "not_configured") {
     return mockResponse(history);
   }
