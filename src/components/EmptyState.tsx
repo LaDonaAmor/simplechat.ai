@@ -24,7 +24,7 @@ export default function EmptyState({
   return (
     <div className="mx-auto flex min-h-full w-full max-w-3xl flex-col justify-center px-5 py-12 sm:px-8">
       <div className="mb-9 max-w-xl">
-        <h1 className="font-serif text-[38px] leading-[1.08] tracking-tight text-ink sm:text-5xl">
+        <h1 className="font-serif text-[38px] leading-[1.08] tracking-[-0.015em] text-ink sm:text-5xl">
           A little curiosity
           <br />
           goes a long way.

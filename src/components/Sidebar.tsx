@@ -123,7 +123,7 @@ export default function Sidebar({
               S
             </span>
             <span>
-              <span className="block font-serif text-[19px] leading-5 tracking-tight">
+              <span className="block font-serif text-[19px] leading-5 tracking-[-0.01em]">
                 SimpleChat
               </span>
               <span className="mt-1 block text-[11px] tracking-wide text-muted">
@@ -305,7 +305,7 @@ export default function Sidebar({
 
             <h2
               id="delete-dialog-title"
-              className="font-serif text-2xl tracking-tight"
+              className="font-serif text-2xl tracking-[-0.01em]"
             >
               Delete this conversation?
             </h2>
