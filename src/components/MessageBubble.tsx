@@ -1,4 +1,6 @@
 import type { Message } from "../types/chat";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function MessageBubble({ message }: { message: Message }) {
   if (message.role === "user") {
@@ -37,7 +39,11 @@ export default function MessageBubble({ message }: { message: Message }) {
         <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted">
           {message.error ? "Couldn’t respond" : "SimpleChat"}
         </p>
-        <p className="whitespace-pre-wrap wrap-break-word">{message.content}</p>
+        <div className="assistant-markdown min-w-0">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {message.content}
+          </ReactMarkdown>
+        </div>
       </div>
     </article>
   );

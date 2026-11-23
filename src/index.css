@@ -134,3 +134,104 @@ dialog::backdrop {
     transition-duration: 0.01ms !important;
   }
 }
+
+.assistant-markdown {
+  overflow-wrap: anywhere;
+}
+
+.assistant-markdown > :first-child {
+  margin-top: 0;
+}
+
+.assistant-markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.assistant-markdown p,
+.assistant-markdown ul,
+.assistant-markdown ol,
+.assistant-markdown blockquote,
+.assistant-markdown table,
+.assistant-markdown pre {
+  margin: 0.75rem 0;
+}
+
+.assistant-markdown h1,
+.assistant-markdown h2,
+.assistant-markdown h3 {
+  margin: 1.25rem 0 0.5rem;
+  color: var(--c-ink);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.assistant-markdown h1 {
+  font-size: 1.25rem;
+}
+
+.assistant-markdown h2 {
+  font-size: 1.125rem;
+}
+
+.assistant-markdown h3 {
+  font-size: 1rem;
+}
+
+.assistant-markdown ul,
+.assistant-markdown ol {
+  padding-left: 1.5rem;
+}
+
+.assistant-markdown ul {
+  list-style: disc;
+}
+
+.assistant-markdown ol {
+  list-style: decimal;
+}
+
+.assistant-markdown li + li {
+  margin-top: 0.25rem;
+}
+
+.assistant-markdown table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.assistant-markdown th,
+.assistant-markdown td {
+  min-width: 8rem;
+  border: 1px solid var(--c-line);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.assistant-markdown th {
+  background: var(--c-surface-2);
+  font-weight: 600;
+}
+
+.assistant-markdown code {
+  border-radius: 0.25rem;
+  background: var(--c-surface-2);
+  padding: 0.1rem 0.3rem;
+  font-size: 0.9em;
+}
+
+.assistant-markdown pre {
+  overflow-x: auto;
+  border: 1px solid var(--c-line);
+  border-radius: 0.75rem;
+  background: var(--c-surface-2);
+  padding: 0.75rem;
+}
+
+.assistant-markdown pre code {
+  background: transparent;
+  padding: 0;
+}
