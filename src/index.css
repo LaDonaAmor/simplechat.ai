@@ -2,8 +2,8 @@
 
 @theme inline {
   --font-sans:
-    "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-serif: "DM Serif Display", Georgia, "Times New Roman", serif;
+    "Ranade", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Ranade", ui-sans-serif, system-ui, sans-serif;
 
   --color-paper: var(--c-paper);
   --color-surface: var(--c-surface);
@@ -19,16 +19,16 @@
 
 :root {
   color-scheme: light;
-  --c-paper: #f7f7f3;
-  --c-surface: #ffffff;
-  --c-surface-2: #f0f2ed;
-  --c-ink: #20271f;
-  --c-muted: #7d857b;
-  --c-line: #e5e8e1;
-  --c-accent: #355b45;
-  --c-accent-soft: #e8efe9;
-  --c-on-accent: #ffffff;
-  --c-danger: #b34444;
+  --c-paper: #fdfdfd;
+  --c-surface: #fdfdfd;
+  --c-surface-2: #f4f4f4;
+  --c-ink: #060606;
+  --c-muted: #666666;
+  --c-line: rgb(6 6 6 / 14%);
+  --c-accent: #016030;
+  --c-accent-soft: rgb(1 96 48 / 9%);
+  --c-on-accent: #fdfdfd;
+  --c-danger: #060606;
 }
 
 * {
@@ -55,6 +55,18 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+}
+
 button,
 textarea,
 input {
@@ -73,6 +85,11 @@ button {
 :focus-visible {
   outline: 2px solid var(--c-accent);
   outline-offset: 3px;
+}
+
+textarea:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 
 dialog {
@@ -116,4 +133,105 @@ dialog::backdrop {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+.assistant-markdown {
+  overflow-wrap: anywhere;
+}
+
+.assistant-markdown > :first-child {
+  margin-top: 0;
+}
+
+.assistant-markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.assistant-markdown p,
+.assistant-markdown ul,
+.assistant-markdown ol,
+.assistant-markdown blockquote,
+.assistant-markdown table,
+.assistant-markdown pre {
+  margin: 0.75rem 0;
+}
+
+.assistant-markdown h1,
+.assistant-markdown h2,
+.assistant-markdown h3 {
+  margin: 1.25rem 0 0.5rem;
+  color: var(--c-ink);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.assistant-markdown h1 {
+  font-size: 1.25rem;
+}
+
+.assistant-markdown h2 {
+  font-size: 1.125rem;
+}
+
+.assistant-markdown h3 {
+  font-size: 1rem;
+}
+
+.assistant-markdown ul,
+.assistant-markdown ol {
+  padding-left: 1.5rem;
+}
+
+.assistant-markdown ul {
+  list-style: disc;
+}
+
+.assistant-markdown ol {
+  list-style: decimal;
+}
+
+.assistant-markdown li + li {
+  margin-top: 0.25rem;
+}
+
+.assistant-markdown table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.assistant-markdown th,
+.assistant-markdown td {
+  min-width: 8rem;
+  border: 1px solid var(--c-line);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.assistant-markdown th {
+  background: var(--c-surface-2);
+  font-weight: 600;
+}
+
+.assistant-markdown code {
+  border-radius: 0.25rem;
+  background: var(--c-surface-2);
+  padding: 0.1rem 0.3rem;
+  font-size: 0.9em;
+}
+
+.assistant-markdown pre {
+  overflow-x: auto;
+  border: 1px solid var(--c-line);
+  border-radius: 0.75rem;
+  background: var(--c-surface-2);
+  padding: 0.75rem;
+}
+
+.assistant-markdown pre code {
+  background: transparent;
+  padding: 0;
 }

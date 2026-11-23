@@ -9,6 +9,7 @@ import {
   saveConversations,
 } from "./lib/storage";
 import type { Conversation, Message } from "./types/chat";
+import { deriveTitle } from "./lib/text";
 
 const newId = () => crypto.randomUUID();
 
@@ -100,7 +101,7 @@ function App() {
         c.id === convId
           ? {
               ...c,
-              title: wasEmpty ? text.slice(0, 40) : c.title,
+              title: wasEmpty ? deriveTitle(text) : c.title,
               messages: history,
             }
           : c,

@@ -1,47 +1,36 @@
-# SimpleChat — AI Chatbot
+# SimpleChat
 
-A simple AI chatbot built with React, TypeScript, Tailwind CSS and Vite.
+A small, focused AI chat app: React + Vite frontend, a single Vercel
+serverless function in front of Groq, and conversations stored in the browser.
 
-## Features
+- **Live demo:** https://simplechat-aichatbot.vercel.app/
+- **Logo:** `public/img/SimpleChat.jpg`
 
-- Default welcome conversation
-- Send messages and get AI replies (mock responses by default)
-- Create conversations; the title becomes your first question
-- Rename and delete conversations
-- Conversations persist in localStorage
-- Responsive layout with a mobile sidebar
+## Why
 
-## Tech Stack
+I built this to understand the whole path end to end: UI state → local
+persistence → a real LLM → keeping the API key off the client. The interesting
+constraints were offline-first conversations, a clean mobile layout, and a
+thin serverless boundary.
 
-React 19, TypeScript, Vite, Tailwind CSS v4
+## How it works
 
-## Getting Started
+- React 19, Vite, Tailwind v4 (design tokens via `@theme`)
+- Conversations persist in `localStorage` (validated on load)
+- `POST /api/chat` proxies Groq; `GROQ_API_KEY` never reaches the browser
+- `pnpm dev` runs the same handler locally through a dev middleware
 
+## Decisions & tradeoffs
+
+- **Serverless proxy over client key** — the key would otherwise ship in the JS bundle.
+- **Non-streaming first** — simpler to reason about; streaming + Stop is next.
+- **Ranade for type** — a deliberate choice over the default Inter/serif look.
+- **Mock fallback** — if no key is configured, the API returns `not_configured`
+  and the client replies from a clearly-labelled local mock.
+
+## Getting started
+
+```bash
 pnpm install
-pnpm dev # start dev server
-pnpm build # production build -> dist/
-pnpm preview # preview build
-pnpm lint
-
-## AI API
-
-The app talks to `/api/chat`, a Vercel serverless function (`api/chat.ts`)
-that calls OpenAI. The API key lives only on the server.
-
-- No `OPENAI_API_KEY` set → the app uses built-in mock replies.
-- Local `pnpm dev` → mock (Vite doesn't run the function).
-- Local full-stack → `pnpm dlx vercel dev` (runs `api/` functions).
-- Deployed on Vercel → real API when `OPENAI_API_KEY` is configured.
-
-### Configure the real API
-
-1. Vercel → Project → Settings → Environment Variables
-2. Add `OPENAI_API_KEY` (Production, Preview, Development)
-3. Redeploy (env changes need a new deployment)
-
-Never prefix the key with `VITE_` — that exposes it to the browser.
-
-## License
-
-TechNurse
-MIT
+pnpm dev
+```

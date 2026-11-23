@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Conversation } from "../types/chat";
-import { ChatIcon, CloseIcon, PencilIcon, PlusIcon, TrashIcon } from "./icons";
+import { CloseIcon, ChatIcon, PencilIcon, PlusIcon, TrashIcon } from "./icons";
+import { groupByRecency } from "../lib/conversations";
 
 interface SidebarProps {
   conversations: Conversation[];
@@ -11,45 +12,6 @@ interface SidebarProps {
   onNew: () => void;
   onRename: (id: string, title: string) => void;
   onDelete: (id: string) => void;
-}
-
-interface Group {
-  label: string;
-  items: Conversation[];
-}
-
-function groupByRecency(conversations: Conversation[]): Group[] {
-  const now = new Date();
-  const startOfToday = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-  ).getTime();
-  const startOfYesterday = startOfToday - 86_400_000;
-  const sevenDaysAgo = startOfToday - 6 * 86_400_000;
-
-  const groups: Group[] = [
-    { label: "Today", items: [] },
-    { label: "Yesterday", items: [] },
-    { label: "Previous 7 days", items: [] },
-    { label: "Older", items: [] },
-  ];
-
-  [...conversations]
-    .sort((a, b) => b.createdAt - a.createdAt)
-    .forEach((conversation) => {
-      if (conversation.createdAt >= startOfToday) {
-        groups[0].items.push(conversation);
-      } else if (conversation.createdAt >= startOfYesterday) {
-        groups[1].items.push(conversation);
-      } else if (conversation.createdAt >= sevenDaysAgo) {
-        groups[2].items.push(conversation);
-      } else {
-        groups[3].items.push(conversation);
-      }
-    });
-
-  return groups.filter((group) => group.items.length > 0);
 }
 
 const iconButton =
@@ -113,23 +75,17 @@ export default function Sidebar({
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between px-5 pb-5 pt-6">
+        <div className="flex items-center justify-between px-4 pb-5 pt-6">
           <a
             href="/"
             aria-label="SimpleChat home"
-            className="flex items-center gap-3 rounded-xl"
+            className="rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
           >
-            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-accent text-sm font-semibold tracking-tight text-on-accent shadow-sm">
-              S
-            </span>
-            <span>
-              <span className="block font-serif text-[19px] leading-5 tracking-tight">
-                SimpleChat
-              </span>
-              <span className="mt-1 block text-[11px] tracking-wide text-muted">
-                A quieter kind of AI
-              </span>
-            </span>
+            <img
+              src="/logo-horizontal.png"
+              alt="SimpleChat"
+              className="h-10 w-auto"
+            />
           </a>
 
           <button
@@ -153,13 +109,13 @@ export default function Sidebar({
           </button>
         </div>
 
-        <div className="mx-5 border-t border-line" />
+        <div className="mx-4 border-t border-line" />
 
         <nav
           aria-label="Conversation list"
-          className="min-h-0 flex-1 overflow-y-auto px-3 py-5"
+          className="min-h-0 flex-1 overflow-y-auto px-4 py-5"
         >
-          <div className="mb-3 flex items-center justify-between px-2">
+          <div className="mb-3 flex items-center justify-between px-3">
             <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
               Your conversations
             </p>
@@ -169,7 +125,7 @@ export default function Sidebar({
           </div>
 
           {groups.length === 0 ? (
-            <div className="mx-1 rounded-2xl border border-dashed border-line px-4 py-5">
+            <div className="rounded-2xl border border-dashed border-line px-4 py-5">
               <p className="text-sm font-medium">Nothing here yet</p>
               <p className="mt-1 text-xs leading-5 text-muted">
                 Start a chat and it will appear here.
@@ -178,7 +134,7 @@ export default function Sidebar({
           ) : (
             groups.map((group) => (
               <section key={group.label} className="mb-5">
-                <h2 className="px-2 pb-2 text-[11px] font-medium text-muted">
+                <h2 className="px-3 pb-2 text-[11px] font-medium text-muted">
                   {group.label}
                 </h2>
                 <ul className="space-y-1">
@@ -232,7 +188,7 @@ export default function Sidebar({
                                 {conversation.title}
                               </button>
 
-                              <div className="flex shrink-0 items-center opacity-100 transition md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100">
+                              <div className="flex shrink-0 items-center md:hidden md:group-hover:flex md:group-focus-within:flex">
                                 <button
                                   type="button"
                                   onClick={() => {
@@ -267,8 +223,8 @@ export default function Sidebar({
           )}
         </nav>
 
-        <div className="border-t border-line px-5 py-4">
-          <div className="flex items-center gap-3">
+        <div className="border-t border-line px-4 py-4">
+          <div className="flex items-center gap-3 px-3">
             <span className="grid h-9 w-9 place-items-center rounded-full bg-surface-2 text-xs font-semibold text-accent">
               SC
             </span>
@@ -305,7 +261,7 @@ export default function Sidebar({
 
             <h2
               id="delete-dialog-title"
-              className="font-serif text-2xl tracking-tight"
+              className="font-serif text-2xl tracking-[-0.01em]"
             >
               Delete this conversation?
             </h2>
@@ -324,6 +280,7 @@ export default function Sidebar({
             <div className="mt-7 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
               <button
                 type="button"
+                autoFocus
                 onClick={() => setPendingDelete(null)}
                 className="rounded-xl border border-line px-4 py-2.5 text-sm font-medium text-ink transition hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
               >

@@ -37,7 +37,7 @@ export default function Composer({ onSend, disabled = false }: ComposerProps) {
             event.preventDefault();
             handleSend();
           }}
-          className="rounded-3xl border border-line bg-surface p-2 shadow-[0_12px_40px_-24px_rgb(31_43_34/35%)] transition focus-within:border-accent/40 focus-within:ring-4 focus-within:ring-accent/10"
+          className="rounded-2xl border border-line bg-surface p-2"
         >
           <div className="flex items-end gap-2">
             <textarea

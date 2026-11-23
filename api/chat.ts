@@ -14,7 +14,14 @@ interface ApiResponse {
   };
 }
 
-const SYSTEM_PROMPT = "You are a helpful, friendly assistant.";
+const SYSTEM_PROMPT = [
+  "You are a concise, helpful assistant.",
+  "Answer the user's actual question. Do not invent their project, goals, audience, budget, deadline, or requirements.",
+  "If essential information is missing, ask one brief clarifying question.",
+  "Use clear, plain language and keep answers concise unless the user asks for detail.",
+  "Use Markdown only when it improves readability. Use tables only when comparing structured information.",
+  "Never include HTML tags such as <br>.",
+].join(" ");
 
 function safeParse(value: string): unknown {
   try {
@@ -76,7 +83,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
         },
         body: JSON.stringify({
           model: "openai/gpt-oss-20b",
-          max_completion_tokens: 500,
+          max_completion_tokens: 2048,
           messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
         }),
       },

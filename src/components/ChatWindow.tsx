@@ -67,14 +67,6 @@ export default function ChatWindow({
           <p className="truncate text-sm font-semibold text-ink">
             {conversation.title}
           </p>
-          <p className="mt-0.5 text-[11px] text-muted">SimpleChat assistant</p>
-        </div>
-
-        <div className="hidden items-center gap-2 rounded-full border border-line bg-surface px-3 py-1.5 sm:flex">
-          <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-          <span className="text-[11px] font-medium text-muted">
-            Private conversation
-          </span>
         </div>
       </header>
 
