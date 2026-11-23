@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Conversation } from "../types/chat";
 import { CloseIcon, ChatIcon, PencilIcon, PlusIcon, TrashIcon } from "./icons";
+import { groupByRecency } from "../lib/conversations";
 
 interface SidebarProps {
   conversations: Conversation[];
@@ -11,45 +12,6 @@ interface SidebarProps {
   onNew: () => void;
   onRename: (id: string, title: string) => void;
   onDelete: (id: string) => void;
-}
-
-interface Group {
-  label: string;
-  items: Conversation[];
-}
-
-function groupByRecency(conversations: Conversation[]): Group[] {
-  const now = new Date();
-  const startOfToday = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-  ).getTime();
-  const startOfYesterday = startOfToday - 86_400_000;
-  const sevenDaysAgo = startOfToday - 6 * 86_400_000;
-
-  const groups: Group[] = [
-    { label: "Today", items: [] },
-    { label: "Yesterday", items: [] },
-    { label: "Previous 7 days", items: [] },
-    { label: "Older", items: [] },
-  ];
-
-  [...conversations]
-    .sort((a, b) => b.createdAt - a.createdAt)
-    .forEach((conversation) => {
-      if (conversation.createdAt >= startOfToday) {
-        groups[0].items.push(conversation);
-      } else if (conversation.createdAt >= startOfYesterday) {
-        groups[1].items.push(conversation);
-      } else if (conversation.createdAt >= sevenDaysAgo) {
-        groups[2].items.push(conversation);
-      } else {
-        groups[3].items.push(conversation);
-      }
-    });
-
-  return groups.filter((group) => group.items.length > 0);
 }
 
 const iconButton =
