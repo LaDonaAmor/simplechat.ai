@@ -110,11 +110,12 @@ function App() {
     setIsSending(true);
 
     try {
-      const reply = await getChatbotResponse(history);
+      const { content, truncated } = await getChatbotResponse(history);
       const assistantMessage: Message = {
         id: newId(),
         role: "assistant",
-        content: reply,
+        content,
+        truncated,
       };
       setConversations((prev) =>
         prev.map((c) =>
