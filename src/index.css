@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 @theme inline {
   --font-sans:
     "Ranade", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -15,6 +17,7 @@
   --color-accent-soft: var(--c-accent-soft);
   --color-on-accent: var(--c-on-accent);
   --color-danger: var(--c-danger);
+  --color-on-danger: var(--c-on-danger);
 }
 
 :root {
@@ -29,6 +32,22 @@
   --c-accent-soft: rgb(1 96 48 / 9%);
   --c-on-accent: #fdfdfd;
   --c-danger: #060606;
+  --c-on-danger: #fdfdfd;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --c-paper: #121210;
+  --c-surface: #181816;
+  --c-surface-2: #232320;
+  --c-ink: #f4f3ef;
+  --c-muted: #9b9b93;
+  --c-line: rgb(244 243 239 / 14%);
+  --c-accent: #3ecf8e;
+  --c-accent-soft: rgb(62 207 142 / 14%);
+  --c-on-accent: #0b0b0a;
+  --c-danger: #f4f3ef;
+  --c-on-danger: #121210;
 }
 
 * {

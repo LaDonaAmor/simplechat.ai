@@ -10,6 +10,7 @@ import {
 } from "./lib/storage";
 import type { Conversation, Message } from "./types/chat";
 import { deriveTitle } from "./lib/text";
+import { useTheme } from "./lib/useTheme";
 
 const newId = () => crypto.randomUUID();
 
@@ -36,6 +37,8 @@ function seedConversation(): Conversation {
 }
 
 function App() {
+  const { theme, toggle: toggleTheme } = useTheme();
+
   const [conversations, setConversations] = useState<Conversation[]>(() => {
     const saved = loadConversations();
     return saved.length > 0 ? saved : [seedConversation()];
@@ -155,6 +158,8 @@ function App() {
         onNew={handleNew}
         onRename={handleRename}
         onDelete={handleDelete}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
       <main className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
         <ChatWindow
