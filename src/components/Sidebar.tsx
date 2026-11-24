@@ -116,9 +116,8 @@ export default function Sidebar({
           className="min-h-0 flex-1 overflow-y-auto px-4 py-5"
         >
           <div className="mb-3 flex items-center justify-between px-3">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
-              Your conversations
-            </p>
+            <p className="text-[14px] font-medium text-muted">History</p>
+
             <span className="text-[11px] tabular-nums text-muted">
               {conversations.length}
             </span>
@@ -230,8 +229,8 @@ export default function Sidebar({
             </span>
             <div className="min-w-0">
               <p className="truncate text-xs font-semibold">Your workspace</p>
-              <p className="mt-0.5 text-[11px] text-muted">
-                Chats saved on this device
+              <p className="mt-0.5 text-[10px] text-muted">
+                Conversations are stored locally
               </p>
             </div>
           </div>

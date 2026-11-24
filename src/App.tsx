@@ -162,6 +162,7 @@ function App() {
           isSending={isSending}
           onSend={handleSend}
           onOpenSidebar={() => setSidebarOpen(true)}
+          isSidebarOpen={sidebarOpen}
         />
       </main>
     </div>

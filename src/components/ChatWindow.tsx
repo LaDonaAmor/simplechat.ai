@@ -11,6 +11,7 @@ interface ChatWindowProps {
   isSending: boolean;
   onSend: (text: string) => void;
   onOpenSidebar: () => void;
+  isSidebarOpen: boolean;
 }
 
 export default function ChatWindow({
@@ -18,6 +19,7 @@ export default function ChatWindow({
   isSending,
   onSend,
   onOpenSidebar,
+  isSidebarOpen,
 }: ChatWindowProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -58,6 +60,7 @@ export default function ChatWindow({
           onClick={onOpenSidebar}
           aria-label="Open conversations"
           aria-controls="conversation-sidebar"
+          aria-expanded={isSidebarOpen}
           className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-line bg-surface text-muted transition hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 md:hidden"
         >
           <MenuIcon className="h-4 w-4" />
@@ -70,10 +73,7 @@ export default function ChatWindow({
         </div>
       </header>
 
-      <div
-        aria-live="polite"
-        className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
-      >
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
         {isEmpty && !isSending ? (
           <EmptyState onPick={onSend} />
         ) : (
