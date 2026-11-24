@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type { Conversation } from "../types/chat";
 import { CloseIcon, ChatIcon, PencilIcon, PlusIcon, TrashIcon } from "./icons";
 import { groupByRecency } from "../lib/conversations";
+import { useSidebarWidth } from "../lib/useSidebarSize";
 
 interface SidebarProps {
   conversations: Conversation[];
@@ -32,6 +33,8 @@ export default function Sidebar({
   const [pendingDelete, setPendingDelete] = useState<Conversation | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const groups = groupByRecency(conversations);
+  const { width, onPointerDown, onPointerMove, onPointerUp, reset } =
+    useSidebarWidth();
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -71,7 +74,8 @@ export default function Sidebar({
       <aside
         id="conversation-sidebar"
         aria-label="Conversation navigation"
-        className={`fixed inset-y-0 left-0 z-40 flex w-[min(86vw,310px)] flex-col border-r border-line bg-surface transition-transform duration-200 md:static md:z-auto md:w-71.5 md:translate-x-0 ${
+        style={{ "--sb-w": `${width}px` } as CSSProperties}
+        className={`fixed inset-y-0 left-0 z-40 flex w-[min(86vw,310px)] flex-col border-r border-line bg-surface transition-transform duration-200 md:relative md:z-auto md:w-(--sb-w) md:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -235,6 +239,17 @@ export default function Sidebar({
             </div>
           </div>
         </div>
+
+        <div
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize sidebar"
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onDoubleClick={reset}
+          className="absolute inset-y-0 -right-1 z-10 hidden w-2 cursor-col-resize select-none md:block after:absolute after:inset-y-0 after:left-1/2 after:w-px after:bg-transparent after:transition hover:after:bg-line"
+        />
       </aside>
 
       {pendingDelete && (
@@ -287,7 +302,6 @@ export default function Sidebar({
               </button>
               <button
                 type="button"
-                autoFocus
                 onClick={confirmDelete}
                 className="rounded-xl bg-danger px-4 py-2.5 text-sm font-semibold text-white transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger/60 focus-visible:ring-offset-2"
               >

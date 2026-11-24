@@ -3,8 +3,8 @@
 A small, focused AI chat app: React + Vite frontend, a single Vercel
 serverless function in front of Groq, and conversations stored in the browser.
 
-- **Live demo:** https://simplechat-aichatbot.vercel.app/
-- **Logo:** `public/img/SimpleChat.jpg`
+- **Live demo:** https://your-app.vercel.app
+- **Screenshots:** `public/img/SimpleChat.jpg`
 
 ## Why
 

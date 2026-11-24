@@ -30,7 +30,7 @@ export default function Composer({ onSend, disabled = false }: ComposerProps) {
   const canSend = Boolean(value.trim()) && !disabled;
 
   return (
-    <div className="shrink-0 px-3 pb-3 pt-3 sm:px-6 sm:pb-5">
+    <div className="shrink-0 px-3 pt-3 sm:px-6 sm:pb-5 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
       <div className="mx-auto w-full max-w-3xl">
         <form
           onSubmit={(event) => {
@@ -73,7 +73,7 @@ export default function Composer({ onSend, disabled = false }: ComposerProps) {
           </p>
         </form>
 
-        <p className="mt-2 text-center text-[11px] leading-4 text-muted">
+        <p className="mt-2 hidden text-center text-[11px] leading-4 text-muted [@media(min-height:680px)]:block">
           AI can make mistakes. Check important information.
         </p>
       </div>

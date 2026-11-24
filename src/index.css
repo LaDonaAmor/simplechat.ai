@@ -46,6 +46,11 @@ body,
   margin: 0;
 }
 
+html {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) 0
+    env(safe-area-inset-left);
+}
+
 body {
   background: var(--c-paper);
   color: var(--c-ink);
@@ -151,7 +156,6 @@ dialog::backdrop {
 .assistant-markdown ul,
 .assistant-markdown ol,
 .assistant-markdown blockquote,
-.assistant-markdown table,
 .assistant-markdown pre {
   margin: 0.75rem 0;
 }
@@ -194,10 +198,18 @@ dialog::backdrop {
   margin-top: 0.25rem;
 }
 
-.assistant-markdown table {
-  display: block;
+.assistant-markdown .markdown-table-scroll {
   width: 100%;
+  max-width: 100%;
+  margin: 0.75rem 0;
   overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.assistant-markdown table {
+  width: max-content;
+  min-width: 100%;
   border-collapse: collapse;
   font-size: 0.875rem;
 }

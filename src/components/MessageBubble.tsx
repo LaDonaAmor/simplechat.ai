@@ -28,12 +28,26 @@ export default function MessageBubble({ message }: { message: Message }) {
         S
       </span>
       <div
-        className={`min-w-0 max-w-[92%] text-[15px] leading-7 ${
+        className={`min-w-0 flex-1 max-w-[92%] text-[15px] leading-7 ${
           message.error ? "text-danger" : "text-ink"
         }`}
       >
         <div className="assistant-markdown min-w-0">
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={{
+              table: ({ children }) => (
+                <div
+                  className="markdown-table-scroll"
+                  role="region"
+                  aria-label="Scrollable response table"
+                  tabIndex={0}
+                >
+                  <table>{children}</table>
+                </div>
+              ),
+            }}
+          >
             {message.content}
           </ReactMarkdown>
         </div>
