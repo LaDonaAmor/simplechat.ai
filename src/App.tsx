@@ -156,7 +156,7 @@ function App() {
         onRename={handleRename}
         onDelete={handleDelete}
       />
-      <main className="flex min-h-0 flex-1 flex-col">
+      <main className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
         <ChatWindow
           conversation={activeConversation}
           isSending={isSending}

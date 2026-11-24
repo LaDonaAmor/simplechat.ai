@@ -30,7 +30,7 @@ export default function Composer({ onSend, disabled = false }: ComposerProps) {
   const canSend = Boolean(value.trim()) && !disabled;
 
   return (
-    <div className="shrink-0 px-3 pt-3 sm:px-6 sm:pb-5 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+    <div className="min-w-0 w-full shrink-0 px-3 pt-3 sm:px-6 sm:pb-5 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
       <div className="mx-auto w-full max-w-3xl">
         <form
           onSubmit={(event) => {

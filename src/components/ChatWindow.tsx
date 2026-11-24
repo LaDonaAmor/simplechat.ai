@@ -53,7 +53,7 @@ export default function ChatWindow({
   const isEmpty = conversation.messages.length === 0;
 
   return (
-    <section className="flex min-h-0 flex-1 flex-col bg-paper">
+    <section className="flex min-h-0 min-w-0 w-full flex-1 flex-col overflow-hidden bg-paper">
       <header className="flex h-14 sm:h-18 shrink-0 items-center gap-3 border-b border-line/80 bg-paper/90 px-4 sm:px-8">
         <button
           type="button"
@@ -73,11 +73,11 @@ export default function ChatWindow({
         </div>
       </header>
 
-      <div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain">
+      <div className="min-h-0 min-w-0 w-full flex-1 overflow-x-hidden overflow-y-auto overscroll-contain">
         {isEmpty && !isSending ? (
           <EmptyState onPick={onSend} />
         ) : (
-          <div className="mx-auto flex w-full max-w-3xl flex-col gap-8 px-4 py-8 sm:gap-10 sm:px-8 sm:py-10">
+          <div className="mx-auto flex min-w-0 w-full max-w-3xl flex-col gap-8 px-4 py-8 sm:gap-10 sm:px-8 sm:py-10">
             {conversation.messages.map((message) => (
               <MessageBubble key={message.id} message={message} />
             ))}
