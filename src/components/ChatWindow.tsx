@@ -11,6 +11,7 @@ interface ChatWindowProps {
   isSending: boolean;
   onSend: (text: string) => void;
   onOpenSidebar: () => void;
+  isSidebarOpen: boolean;
 }
 
 export default function ChatWindow({
@@ -18,6 +19,7 @@ export default function ChatWindow({
   isSending,
   onSend,
   onOpenSidebar,
+  isSidebarOpen,
 }: ChatWindowProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -51,13 +53,14 @@ export default function ChatWindow({
   const isEmpty = conversation.messages.length === 0;
 
   return (
-    <section className="flex min-h-0 flex-1 flex-col bg-paper">
-      <header className="flex h-18 shrink-0 items-center gap-3 border-b border-line/80 bg-paper/90 px-4 sm:px-8">
+    <section className="flex min-h-0 min-w-0 w-full flex-1 flex-col overflow-hidden bg-paper">
+      <header className="flex h-14 sm:h-18 shrink-0 items-center gap-3 border-b border-line/80 bg-paper/90 px-4 sm:px-8">
         <button
           type="button"
           onClick={onOpenSidebar}
           aria-label="Open conversations"
           aria-controls="conversation-sidebar"
+          aria-expanded={isSidebarOpen}
           className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-line bg-surface text-muted transition hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 md:hidden"
         >
           <MenuIcon className="h-4 w-4" />
@@ -70,14 +73,11 @@ export default function ChatWindow({
         </div>
       </header>
 
-      <div
-        aria-live="polite"
-        className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
-      >
+      <div className="min-h-0 min-w-0 w-full flex-1 overflow-x-hidden overflow-y-auto overscroll-contain">
         {isEmpty && !isSending ? (
           <EmptyState onPick={onSend} />
         ) : (
-          <div className="mx-auto flex w-full max-w-3xl flex-col gap-8 px-4 py-8 sm:gap-10 sm:px-8 sm:py-10">
+          <div className="mx-auto flex min-w-0 w-full max-w-3xl flex-col gap-8 px-4 py-8 sm:gap-10 sm:px-8 sm:py-10">
             {conversation.messages.map((message) => (
               <MessageBubble key={message.id} message={message} />
             ))}

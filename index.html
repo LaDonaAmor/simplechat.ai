@@ -15,8 +15,23 @@
   <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
   <link href="https://api.fontshare.com/v2/css?f[]=ranade@400,500,600,700&display=swap" rel="stylesheet" />
 
-  <meta name="theme-color" content="#fdfdfd" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#12120f" media="(prefers-color-scheme: dark)" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#fdfdfd" />
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("simplechat:theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+        }
+        document.documentElement.dataset.theme = t;
+        var m = document.querySelector('meta[name="theme-color"]');
+        if (m) m.setAttribute("content", t === "dark" ? "#121210" : "#fdfdfd");
+      } catch (e) { }
+    })();
+  </script>
 
   <title>SimpleChat</title>
   <meta name="description" content="A small, focused AI chat app. Conversations stay on your device." />

@@ -10,6 +10,7 @@ import {
 } from "./lib/storage";
 import type { Conversation, Message } from "./types/chat";
 import { deriveTitle } from "./lib/text";
+import { useTheme } from "./lib/useTheme";
 
 const newId = () => crypto.randomUUID();
 
@@ -36,6 +37,8 @@ function seedConversation(): Conversation {
 }
 
 function App() {
+  const { theme, toggle: toggleTheme } = useTheme();
+
   const [conversations, setConversations] = useState<Conversation[]>(() => {
     const saved = loadConversations();
     return saved.length > 0 ? saved : [seedConversation()];
@@ -110,11 +113,12 @@ function App() {
     setIsSending(true);
 
     try {
-      const reply = await getChatbotResponse(history);
+      const { content, truncated } = await getChatbotResponse(history);
       const assistantMessage: Message = {
         id: newId(),
         role: "assistant",
-        content: reply,
+        content,
+        truncated,
       };
       setConversations((prev) =>
         prev.map((c) =>
@@ -154,13 +158,16 @@ function App() {
         onNew={handleNew}
         onRename={handleRename}
         onDelete={handleDelete}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
-      <main className="flex min-h-0 flex-1 flex-col">
+      <main className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
         <ChatWindow
           conversation={activeConversation}
           isSending={isSending}
           onSend={handleSend}
           onOpenSidebar={() => setSidebarOpen(true)}
+          isSidebarOpen={sidebarOpen}
         />
       </main>
     </div>

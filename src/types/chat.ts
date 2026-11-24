@@ -5,6 +5,7 @@ export interface Message {
   role: Role;
   content: string;
   error?: boolean;
+  truncated?: boolean;
 }
 
 export interface Conversation {

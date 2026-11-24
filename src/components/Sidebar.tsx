@@ -1,7 +1,17 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type { Conversation } from "../types/chat";
-import { CloseIcon, ChatIcon, PencilIcon, PlusIcon, TrashIcon } from "./icons";
 import { groupByRecency } from "../lib/conversations";
+import { useSidebarWidth } from "../lib/useSidebarSize";
+import {
+  CloseIcon,
+  ChatIcon,
+  MoonIcon,
+  PencilIcon,
+  PlusIcon,
+  SunIcon,
+  TrashIcon,
+} from "./icons";
+import type { Theme } from "../lib/useTheme";
 
 interface SidebarProps {
   conversations: Conversation[];
@@ -12,6 +22,8 @@ interface SidebarProps {
   onNew: () => void;
   onRename: (id: string, title: string) => void;
   onDelete: (id: string) => void;
+  theme: Theme;
+  onToggleTheme: () => void;
 }
 
 const iconButton =
@@ -26,12 +38,16 @@ export default function Sidebar({
   onNew,
   onRename,
   onDelete,
+  theme,
+  onToggleTheme,
 }: SidebarProps) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
   const [pendingDelete, setPendingDelete] = useState<Conversation | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const groups = groupByRecency(conversations);
+  const { width, onPointerDown, onPointerMove, onPointerUp, reset } =
+    useSidebarWidth();
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -64,14 +80,15 @@ export default function Sidebar({
           type="button"
           aria-label="Close navigation"
           onClick={onClose}
-          className="fixed inset-0 z-30 bg-ink/30 backdrop-blur-[2px] md:hidden"
+          className="fixed inset-0 z-30 bg-black/50 md:hidden"
         />
       )}
 
       <aside
         id="conversation-sidebar"
         aria-label="Conversation navigation"
-        className={`fixed inset-y-0 left-0 z-40 flex w-[min(86vw,310px)] flex-col border-r border-line bg-surface transition-transform duration-200 md:static md:z-auto md:w-71.5 md:translate-x-0 ${
+        style={{ "--sb-w": `${width}px` } as CSSProperties}
+        className={`fixed inset-y-0 left-0 z-40 flex w-[min(86vw,310px)] flex-col border-r border-line bg-surface transition-transform duration-200 md:relative md:z-auto md:w-(--sb-w) md:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -82,7 +99,11 @@ export default function Sidebar({
             className="rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
           >
             <img
-              src="/logo-horizontal.png"
+              src={
+                theme === "dark"
+                  ? "/logo-horizontal-dark.png"
+                  : "/logo-horizontal.png"
+              }
               alt="SimpleChat"
               className="h-10 w-auto"
             />
@@ -116,9 +137,8 @@ export default function Sidebar({
           className="min-h-0 flex-1 overflow-y-auto px-4 py-5"
         >
           <div className="mb-3 flex items-center justify-between px-3">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
-              Your conversations
-            </p>
+            <p className="text-[14px] font-medium text-muted">History</p>
+
             <span className="text-[11px] tabular-nums text-muted">
               {conversations.length}
             </span>
@@ -225,17 +245,46 @@ export default function Sidebar({
 
         <div className="border-t border-line px-4 py-4">
           <div className="flex items-center gap-3 px-3">
-            <span className="grid h-9 w-9 place-items-center rounded-full bg-surface-2 text-xs font-semibold text-accent">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-surface-2 text-xs font-semibold text-accent">
               SC
             </span>
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <p className="truncate text-xs font-semibold">Your workspace</p>
-              <p className="mt-0.5 text-[11px] text-muted">
-                Chats saved on this device
+              <p className="mt-0.5 text-[10px] text-muted">
+                Conversations are stored locally
               </p>
             </div>
+            <button
+              type="button"
+              onClick={onToggleTheme}
+              aria-label={
+                theme === "dark"
+                  ? "Switch to light theme"
+                  : "Switch to dark theme"
+              }
+              title={theme === "dark" ? "Light theme" : "Dark theme"}
+              className={iconButton}
+            >
+              {theme === "dark" ? (
+                <SunIcon className="h-4 w-4" />
+              ) : (
+                <MoonIcon className="h-4 w-4" />
+              )}
+            </button>
           </div>
         </div>
+
+        <div
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize sidebar"
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerUp}
+          onDoubleClick={reset}
+          className="absolute inset-y-0 -right-1 z-10 hidden w-2 cursor-col-resize touch-none select-none md:block after:absolute after:inset-y-0 after:left-1/2 after:w-px after:bg-transparent after:transition hover:after:bg-accent/40"
+        />
       </aside>
 
       {pendingDelete && (
@@ -252,7 +301,7 @@ export default function Sidebar({
               setPendingDelete(null);
             }
           }}
-          className="m-auto w-[calc(100%-32px)] max-w-105 rounded-3xl border border-line bg-surface p-0 shadow-2xl backdrop:bg-ink/40"
+          className="m-auto w-[calc(100%-32px)] max-w-105 rounded-3xl border border-line bg-surface p-0 shadow-2xl backdrop:bg-black/50"
         >
           <div className="p-6 sm:p-7">
             <div className="mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-danger/10 text-danger">
@@ -288,9 +337,8 @@ export default function Sidebar({
               </button>
               <button
                 type="button"
-                autoFocus
                 onClick={confirmDelete}
-                className="rounded-xl bg-danger px-4 py-2.5 text-sm font-semibold text-white transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger/60 focus-visible:ring-offset-2"
+                className="rounded-xl bg-danger px-4 py-2.5 text-sm font-semibold text-on-danger transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger/60 focus-visible:ring-offset-2"
               >
                 Delete conversation
               </button>
