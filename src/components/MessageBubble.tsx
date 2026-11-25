@@ -6,6 +6,7 @@ import rehypeHighlight from "rehype-highlight";
 import { useCopy } from "../lib/useCopy";
 import { useNow, formatRelative, formatDuration } from "../lib/time";
 import { CheckIcon, CopyIcon, PencilIcon, RefreshIcon } from "./icons";
+import { BrandAvatar } from "./BrandAvatar";
 
 interface MessageBubbleProps {
   message: Message;
@@ -252,16 +253,9 @@ export default function MessageBubble({
 
   return (
     <article className="flex animate-[rise_220ms_ease-out] items-start gap-3 sm:gap-4">
-      <span
-        aria-hidden="true"
-        className={`mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-lg text-[11px] font-semibold ${
-          message.error
-            ? "bg-danger/10 text-danger"
-            : "bg-accent-soft text-accent"
-        }`}
-      >
-        S
-      </span>
+      <div className="mt-1 flex flex-col items-center gap-1">
+        <BrandAvatar />
+      </div>
       <div
         className={`min-w-0 flex-1 max-w-[92%] text-[15px] leading-7 ${
           message.error ? "text-danger" : "text-ink"

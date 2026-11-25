@@ -342,3 +342,26 @@ dialog::backdrop {
 :root[data-theme="dark"] .hljs-built_in {
   color: #56d4dd;
 }
+
+@media (hover: hover) {
+  .message-row {
+    transition:
+      background-color 150ms ease,
+      transform 150ms ease;
+    border-radius: 0.75rem;
+  }
+  .message-row:hover {
+    background: color-mix(in srgb, var(--c-ink) 3%, transparent);
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --c-muted: #3f3f3f;
+    --c-line: rgb(6 6 6 / 45%);
+  }
+  :root[data-theme="dark"] {
+    --c-muted: #d8d8d0;
+    --c-line: rgb(244 243 239 / 45%);
+  }
+}
