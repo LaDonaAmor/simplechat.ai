@@ -4,6 +4,7 @@ import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useCopy } from "../lib/useCopy";
 import { CheckIcon, CopyIcon, PencilIcon, RefreshIcon } from "./icons";
+import rehypeHighlight from "rehype-highlight";
 
 interface MessageBubbleProps {
   message: Message;
@@ -235,6 +236,7 @@ export default function MessageBubble({
         <div className="assistant-markdown min-w-0">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
+            rehypePlugins={[[rehypeHighlight, { detect: false }]]}
             components={markdownComponents}
           >
             {message.content}
