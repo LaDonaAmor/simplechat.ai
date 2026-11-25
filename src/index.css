@@ -266,3 +266,102 @@ dialog::backdrop {
   background: transparent;
   padding: 0;
 }
+
+.assistant-markdown code.hljs {
+  background: transparent;
+  padding: 0;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #7d8a7f;
+  font-style: italic;
+}
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-section {
+  color: #c678dd;
+}
+.hljs-string,
+.hljs-attr,
+.hljs-template-tag,
+.hljs-addition {
+  color: #16a34a;
+}
+.hljs-number,
+.hljs-symbol,
+.hljs-bullet {
+  color: #d19a66;
+}
+.hljs-title,
+.hljs-name,
+.hljs-function .hljs-title {
+  color: #2563eb;
+}
+.hljs-type,
+.hljs-built_in,
+.hljs-class .hljs-title {
+  color: #0891b2;
+}
+.hljs-variable,
+.hljs-params {
+  color: var(--c-ink);
+}
+.hljs-meta {
+  color: #9b9b93;
+}
+.hljs-deletion {
+  color: #dc2626;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: 600;
+}
+
+:root[data-theme="dark"] .hljs-keyword,
+:root[data-theme="dark"] .hljs-selector-tag,
+:root[data-theme="dark"] .hljs-literal,
+:root[data-theme="dark"] .hljs-section {
+  color: #c792ea;
+}
+:root[data-theme="dark"] .hljs-string,
+:root[data-theme="dark"] .hljs-attr {
+  color: #7ee787;
+}
+:root[data-theme="dark"] .hljs-number {
+  color: #ffab70;
+}
+:root[data-theme="dark"] .hljs-title,
+:root[data-theme="dark"] .hljs-name {
+  color: #79c0ff;
+}
+:root[data-theme="dark"] .hljs-type,
+:root[data-theme="dark"] .hljs-built_in {
+  color: #56d4dd;
+}
+
+@media (hover: hover) {
+  .message-row {
+    transition:
+      background-color 150ms ease,
+      transform 150ms ease;
+    border-radius: 0.75rem;
+  }
+  .message-row:hover {
+    background: color-mix(in srgb, var(--c-ink) 3%, transparent);
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --c-muted: #3f3f3f;
+    --c-line: rgb(6 6 6 / 45%);
+  }
+  :root[data-theme="dark"] {
+    --c-muted: #d8d8d0;
+    --c-line: rgb(244 243 239 / 45%);
+  }
+}

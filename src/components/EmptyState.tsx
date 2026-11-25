@@ -4,6 +4,12 @@ const SUGGESTIONS = [
   "Help me write a clear, friendly email",
 ];
 
+const FEATURES = [
+  "Local-first history",
+  "Streaming replies",
+  "gpt-oss-20b via Groq",
+];
+
 export default function EmptyState({
   onPick,
 }: {
@@ -19,13 +25,24 @@ export default function EmptyState({
         small open model.
       </p>
 
+      <ul className="mt-5 flex flex-wrap gap-2">
+        {FEATURES.map((feature) => (
+          <li
+            key={feature}
+            className="rounded-full border border-line bg-surface px-3 py-1.5 text-[11px] font-medium text-muted"
+          >
+            {feature}
+          </li>
+        ))}
+      </ul>
+
       <div className="mt-8 flex flex-col gap-2">
         {SUGGESTIONS.map((suggestion) => (
           <button
             key={suggestion}
             type="button"
             onClick={() => onPick(suggestion)}
-            className="rounded-xl border border-line bg-surface px-4 py-3 text-left text-sm text-ink transition hover:border-accent/40 hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+            className="rounded-xl border border-line bg-surface px-4 py-3 text-left text-sm text-ink transition hover:border-accent/40 hover:bg-surface-2 hover:-translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
           >
             {suggestion}
           </button>
