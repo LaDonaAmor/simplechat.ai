@@ -11,7 +11,7 @@ import {
 import type { Conversation, Message } from "./types/chat";
 import { deriveTitle } from "./lib/text";
 import { useTheme } from "./lib/useTheme";
-import { useToast } from "./components/Toast";
+import { useToast } from "./lib/toast";
 import { exportConversation, type ExportFormat } from "./lib/exportChat";
 
 const newId = () => crypto.randomUUID();

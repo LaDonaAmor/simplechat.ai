@@ -1,34 +1,9 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
+import { useCallback, useMemo, useRef, useState, type ReactNode } from "react";
 import { CloseIcon } from "./icons";
+import { ToastContext, type ToastOptions } from "../lib/toast";
 
-interface ToastOptions {
-  message: string;
-  actionLabel?: string;
-  onAction?: () => void;
-  duration?: number;
-}
 interface ToastItem extends ToastOptions {
   id: string;
-}
-
-interface ToastContextValue {
-  toast: (options: ToastOptions) => void;
-}
-
-const ToastContext = createContext<ToastContextValue | null>(null);
-
-export function useToast(): ToastContextValue {
-  const ctx = useContext(ToastContext);
-  if (!ctx) throw new Error("useToast must be used within ToastProvider");
-  return ctx;
 }
 
 export function ToastProvider({ children }: { children: ReactNode }) {

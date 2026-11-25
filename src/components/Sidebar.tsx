@@ -1,10 +1,4 @@
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type CSSProperties,
-} from "react";
+import { useMemo, useState, type CSSProperties } from "react";
 import type { Conversation } from "../types/chat";
 import { groupByRecency } from "../lib/conversations";
 import { useSidebarWidth } from "../lib/useSidebarSize";
@@ -170,7 +164,7 @@ export default function Sidebar({
         aria-label="Conversation navigation"
         style={{ "--sb-w": `${width}px` } as CSSProperties}
         data-resizing={isDragging || undefined}
-        className={`fixed inset-y-0 left-0 z-40 flex w-[min(86vw,310px)] flex-col border-r border-line bg-surface transition-transform duration-200 data-[resizing]:transition-none md:relative md:z-auto md:w-(--sb-w) md:transition-transform md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 flex w-[min(86vw,310px)] flex-col border-r border-line bg-surface transition-transform duration-200 data-resizing:transition-none md:relative md:z-auto md:w-(--sb-w) md:transition-transform md:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -319,7 +313,7 @@ export default function Sidebar({
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
           onDoubleClick={reset}
-          className="absolute inset-y-0 -right-1 z-10 hidden w-2 cursor-col-resize touch-none select-none md:block after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] after:bg-transparent after:transition hover:after:bg-accent/40"
+          className="absolute inset-y-0 -right-1 z-10 hidden w-2 cursor-col-resize touch-none select-none md:block after:absolute after:inset-y-0 after:left-1/2 after:w-0.5 after:bg-transparent after:transition hover:after:bg-accent/40"
         />
       </aside>
     </>

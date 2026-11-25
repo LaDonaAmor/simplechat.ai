@@ -251,6 +251,10 @@ export default function MessageBubble({
     );
   }
 
+  if (message.streaming && message.content.length === 0) {
+    return null;
+  }
+
   return (
     <article className="flex animate-[rise_220ms_ease-out] items-start gap-3 sm:gap-4">
       <div className="mt-1 flex flex-col items-center gap-1">
@@ -270,20 +274,24 @@ export default function MessageBubble({
             {message.content}
           </ReactMarkdown>
         </div>
-        {message.truncated && (
+
+        {!message.streaming && message.truncated && (
           <p className="mt-2 text-xs text-muted">
             Response was cut off — try “continue”.
           </p>
         )}
-        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
-          <AssistantActions
-            content={message.content}
-            disabled={isSending}
-            canRegenerate={isLastAssistant}
-            onRegenerate={onRegenerate}
-          />
-          <MessageMeta createdAt={message.createdAt} stats={message.stats} />
-        </div>
+
+        {!message.streaming && (
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+            <AssistantActions
+              content={message.content}
+              disabled={isSending}
+              canRegenerate={isLastAssistant && !message.error}
+              onRegenerate={onRegenerate}
+            />
+            <MessageMeta createdAt={message.createdAt} stats={message.stats} />
+          </div>
+        )}
       </div>
     </article>
   );

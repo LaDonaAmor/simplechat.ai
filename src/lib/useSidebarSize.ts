@@ -20,6 +20,7 @@ export function useSidebarWidth() {
       return DEFAULT;
     }
   });
+  const [isDragging, setIsDragging] = useState(false);
   const dragging = useRef(false);
 
   useEffect(() => {
@@ -32,6 +33,7 @@ export function useSidebarWidth() {
 
   const onPointerDown = useCallback((e: ReactPointerEvent<HTMLElement>) => {
     dragging.current = true;
+    setIsDragging(true);
     e.currentTarget.setPointerCapture(e.pointerId);
   }, []);
 
@@ -42,9 +44,17 @@ export function useSidebarWidth() {
 
   const onPointerUp = useCallback(() => {
     dragging.current = false;
+    setIsDragging(false);
   }, []);
 
   const reset = useCallback(() => setWidth(DEFAULT), []);
 
-  return { width, onPointerDown, onPointerMove, onPointerUp, reset };
+  return {
+    width,
+    isDragging,
+    onPointerDown,
+    onPointerMove,
+    onPointerUp,
+    reset,
+  };
 }
