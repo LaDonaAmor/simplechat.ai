@@ -92,26 +92,8 @@ function App() {
     });
   }
 
-  async function handleSend(text: string) {
-    if (!activeConversation || isSending) return;
-    const userMessage: Message = { id: newId(), role: "user", content: text };
-    const history = [...activeConversation.messages, userMessage];
-    const convId = activeConversation.id;
-    const wasEmpty = activeConversation.messages.length === 0;
-
-    setConversations((prev) =>
-      prev.map((c) =>
-        c.id === convId
-          ? {
-              ...c,
-              title: wasEmpty ? deriveTitle(text) : c.title,
-              messages: history,
-            }
-          : c,
-      ),
-    );
+  async function requestReply(convId: string, history: Message[]) {
     setIsSending(true);
-
     try {
       const { content, truncated } = await getChatbotResponse(history);
       const assistantMessage: Message = {
@@ -147,6 +129,64 @@ function App() {
     }
   }
 
+  async function handleSend(text: string) {
+    if (!activeConversation || isSending) return;
+    const userMessage: Message = { id: newId(), role: "user", content: text };
+    const history = [...activeConversation.messages, userMessage];
+    const convId = activeConversation.id;
+    const wasEmpty = activeConversation.messages.length === 0;
+
+    setConversations((prev) =>
+      prev.map((c) =>
+        c.id === convId
+          ? {
+              ...c,
+              title: wasEmpty ? deriveTitle(text) : c.title,
+              messages: history,
+            }
+          : c,
+      ),
+    );
+    await requestReply(convId, history);
+  }
+
+  function handleRegenerate(convId: string) {
+    if (isSending) return;
+    const conv = conversations.find((c) => c.id === convId);
+    if (!conv) return;
+    const lastUserIndex = conv.messages.map((m) => m.role).lastIndexOf("user");
+    if (lastUserIndex === -1) return;
+
+    const history = conv.messages.slice(0, lastUserIndex + 1);
+    setConversations((prev) =>
+      prev.map((c) => (c.id === convId ? { ...c, messages: history } : c)),
+    );
+    void requestReply(convId, history);
+  }
+
+  function handleEditMessage(convId: string, messageId: string, text: string) {
+    if (isSending) return;
+    const conv = conversations.find((c) => c.id === convId);
+    if (!conv) return;
+    const index = conv.messages.findIndex((m) => m.id === messageId);
+    if (index === -1) return;
+
+    const edited: Message = { ...conv.messages[index], content: text };
+    const history = [...conv.messages.slice(0, index), edited];
+    setConversations((prev) =>
+      prev.map((c) =>
+        c.id === convId
+          ? {
+              ...c,
+              title: index === 0 ? deriveTitle(text) : c.title,
+              messages: history,
+            }
+          : c,
+      ),
+    );
+    void requestReply(convId, history);
+  }
+
   return (
     <div className="flex h-dvh w-full overflow-hidden bg-paper text-ink">
       <Sidebar
@@ -168,6 +208,8 @@ function App() {
           onSend={handleSend}
           onOpenSidebar={() => setSidebarOpen(true)}
           isSidebarOpen={sidebarOpen}
+          onRegenerate={handleRegenerate}
+          onEditMessage={handleEditMessage}
         />
       </main>
     </div>

@@ -12,6 +12,8 @@ interface ChatWindowProps {
   onSend: (text: string) => void;
   onOpenSidebar: () => void;
   isSidebarOpen: boolean;
+  onRegenerate: (convId: string) => void;
+  onEditMessage: (convId: string, messageId: string, text: string) => void;
 }
 
 export default function ChatWindow({
@@ -20,6 +22,8 @@ export default function ChatWindow({
   onSend,
   onOpenSidebar,
   isSidebarOpen,
+  onRegenerate,
+  onEditMessage,
 }: ChatWindowProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -51,6 +55,9 @@ export default function ChatWindow({
   }
 
   const isEmpty = conversation.messages.length === 0;
+  const lastAssistantId = [...conversation.messages]
+    .reverse()
+    .find((message) => message.role === "assistant")?.id;
 
   return (
     <section className="flex min-h-0 min-w-0 w-full flex-1 flex-col overflow-hidden bg-paper">
@@ -79,7 +86,18 @@ export default function ChatWindow({
         ) : (
           <div className="mx-auto flex min-w-0 w-full max-w-3xl flex-col gap-8 px-4 py-8 sm:gap-10 sm:px-8 sm:py-10">
             {conversation.messages.map((message) => (
-              <MessageBubble key={message.id} message={message} />
+              <MessageBubble
+                key={message.id}
+                message={message}
+                isSending={isSending}
+                isLastAssistant={message.id === lastAssistantId}
+                onRegenerate={() => onRegenerate(conversation.id)}
+                onEdit={
+                  message.role === "user"
+                    ? (text) => onEditMessage(conversation.id, message.id, text)
+                    : undefined
+                }
+              />
             ))}
             {isSending && <TypingIndicator />}
             <div ref={bottomRef} />
