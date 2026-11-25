@@ -111,15 +111,19 @@ export default defineConfig(({ mode }) => {
           "logo.png",
         ],
         manifest: {
+          id: "/",
           name: "SimpleChat",
           short_name: "SimpleChat",
           description:
             "A small, focused AI chat app. Conversations stay on your device.",
+          lang: "en",
           start_url: "/",
           scope: "/",
           display: "standalone",
+          orientation: "portrait-primary",
           background_color: "#fdfdfd",
           theme_color: "#016030",
+          categories: ["productivity", "utilities"],
           icons: [
             {
               src: "/favicon_io/android-chrome-192x192.png",
@@ -147,6 +151,19 @@ export default defineConfig(({ mode }) => {
           navigateFallbackDenylist: [/^\/api\//],
           cleanupOutdatedCaches: true,
           clientsClaim: true,
+          runtimeCaching: [
+            {
+              urlPattern: /^https:\/\/cdn\.fontshare\.com\/.*/i,
+              handler: "StaleWhileRevalidate",
+              options: {
+                cacheName: "fontshare",
+                expiration: {
+                  maxEntries: 24,
+                  maxAgeSeconds: 60 * 60 * 24 * 365,
+                },
+              },
+            },
+          ],
         },
         devOptions: { enabled: true, type: "module" },
       }),
