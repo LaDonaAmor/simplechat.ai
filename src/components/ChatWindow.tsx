@@ -1,10 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Conversation } from "../types/chat";
 import MessageBubble from "./MessageBubble";
 import Composer from "./Composer";
 import TypingIndicator from "./TypingIndicator";
 import EmptyState from "./EmptyState";
-import { MenuIcon } from "./icons";
+import { ArrowDownIcon, MenuIcon } from "./icons";
 
 interface ChatWindowProps {
   conversation: Conversation | null;
@@ -26,21 +26,71 @@ export default function ChatWindow({
   onEditMessage,
 }: ChatWindowProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const stickRef = useRef(true);
+  const prevConvId = useRef<string | null>(null);
 
-  useEffect(() => {
-    const bottom = bottomRef.current;
-    if (!bottom) return;
+  const [showJump, setShowJump] = useState(false);
 
+  // Scroll to the bottom of the conversation
+  const scrollToBottom = useCallback((smooth: boolean) => {
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
-    bottom.scrollIntoView({
-      behavior: reduceMotion ? "auto" : "smooth",
+    bottomRef.current?.scrollIntoView({
+      behavior: smooth && !reduceMotion ? "smooth" : "auto",
       block: "end",
     });
-  }, [conversation?.id, conversation?.messages.length, isSending]);
 
+    stickRef.current = true;
+    setShowJump(false);
+  }, []);
+
+  // Track whether the user is near the bottom
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const near = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
+
+    stickRef.current = near;
+
+    if (near) {
+      setShowJump(false);
+    }
+  }, []);
+
+  // Handle automatic scrolling when messages or conversations change
+  useEffect(() => {
+    const convChanged = prevConvId.current !== (conversation?.id ?? null);
+
+    prevConvId.current = conversation?.id ?? null;
+
+    if (!convChanged && !stickRef.current) {
+      setShowJump(true);
+      return;
+    }
+
+    scrollToBottom(!convChanged);
+  }, [
+    conversation?.id,
+    conversation?.messages.length,
+    isSending,
+    scrollToBottom,
+  ]);
+
+  // Handle sending messages
+  const handleSend = useCallback(
+    (text: string) => {
+      stickRef.current = true;
+      setShowJump(false);
+      onSend(text);
+    },
+    [onSend],
+  );
+
+  // Handle when no conversation is selected
   if (!conversation) {
     return (
       <section className="grid min-h-0 flex-1 place-items-center px-6 text-center">
@@ -55,12 +105,14 @@ export default function ChatWindow({
   }
 
   const isEmpty = conversation.messages.length === 0;
-  const lastAssistantId = [...conversation.messages]
-    .reverse()
-    .find((message) => message.role === "assistant")?.id;
+
+  const lastAssistantId =
+    [...conversation.messages]
+      .reverse()
+      .find((message) => message.role === "assistant")?.id ?? null;
 
   return (
-    <section className="flex min-h-0 min-w-0 w-full flex-1 flex-col overflow-hidden bg-paper">
+    <section className="relative flex min-h-0 min-w-0 w-full flex-1 flex-col overflow-hidden bg-paper">
       <header className="flex h-14 sm:h-18 shrink-0 items-center gap-3 border-b border-line/80 bg-paper/90 px-4 sm:px-8">
         <button
           type="button"
@@ -80,9 +132,13 @@ export default function ChatWindow({
         </div>
       </header>
 
-      <div className="min-h-0 min-w-0 w-full flex-1 overflow-x-hidden overflow-y-auto overscroll-contain">
+      <div
+        ref={scrollRef}
+        onScroll={handleScroll}
+        className="min-h-0 min-w-0 w-full flex-1 overflow-x-hidden overflow-y-auto overscroll-contain"
+      >
         {isEmpty && !isSending ? (
-          <EmptyState onPick={onSend} />
+          <EmptyState onPick={handleSend} />
         ) : (
           <div className="mx-auto flex min-w-0 w-full max-w-3xl flex-col gap-8 px-4 py-8 sm:gap-10 sm:px-8 sm:py-10">
             {conversation.messages.map((message) => (
@@ -99,13 +155,25 @@ export default function ChatWindow({
                 }
               />
             ))}
+
             {isSending && <TypingIndicator />}
+
             <div ref={bottomRef} />
           </div>
         )}
       </div>
 
-      <Composer onSend={onSend} disabled={isSending} />
+      {showJump && (
+        <button
+          type="button"
+          onClick={() => scrollToBottom(true)}
+          className="absolute bottom-28 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-2 text-xs font-medium text-ink shadow-lg transition hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 sm:bottom-32"
+        >
+          <ArrowDownIcon className="h-3.5 w-3.5" />
+        </button>
+      )}
+
+      <Composer onSend={handleSend} disabled={isSending} />
     </section>
   );
 }

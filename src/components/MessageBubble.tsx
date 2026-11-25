@@ -178,7 +178,11 @@ function UserMessage({
   }
 
   return (
-    <article className="group flex items-center justify-end gap-2">
+    <article className="flex flex-col items-end">
+      <div className="max-w-[88%] rounded-2xl rounded-br-md bg-accent px-4 py-3 text-sm leading-7 text-on-accent sm:max-w-[78%] sm:px-5">
+        <p className="whitespace-pre-wrap wrap-break-word">{message.content}</p>
+      </div>
+
       {onEdit && (
         <button
           type="button"
@@ -189,15 +193,11 @@ function UserMessage({
           }}
           aria-label="Edit message"
           title="Edit message"
-          className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-muted opacity-100 transition hover:bg-surface-2 hover:text-ink disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 md:pointer-events-none md:opacity-0 md:group-hover:pointer-events-auto md:group-hover:opacity-100 md:group-focus-within:pointer-events-auto md:group-focus-within:opacity-100"
+          className="mt-2 inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted transition hover:bg-surface-2 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <PencilIcon className="h-3.5 w-3.5" />
+          <PencilIcon className="h-4 w-4" />
         </button>
       )}
-
-      <div className="max-w-[88%] rounded-2xl rounded-br-md bg-accent px-4 py-3 text-sm leading-7 text-on-accent sm:max-w-[78%] sm:px-5">
-        <p className="whitespace-pre-wrap wrap-break-word">{message.content}</p>
-      </div>
     </article>
   );
 }

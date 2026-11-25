@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Sidebar from "./components/Sidebar";
 import ChatWindow from "./components/ChatWindow";
-import { getChatbotResponse } from "./lib/chatApi";
+import { streamChatbotResponse } from "./lib/chatApi";
 import {
   loadActiveId,
   loadConversations,
